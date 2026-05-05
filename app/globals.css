@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-cream:        #FAF6EC;
+  --color-cream-soft:   #FDF9F0;
+  --color-cream-deep:   #F2EBD8;
+  --color-paper:        #E5DCC4;
+
+  --color-ink:          #1A1410;
+  --color-ink-deep:     #0F0B08;
+  --color-ink-soft:     #3A322B;
+  --color-ink-mute:     #7A6F5E;
+
+  --color-brass:        #9C7A4B;
+  --color-brass-deep:   #6E5530;
+  --color-brass-light:  #C9A36F;
+  --color-brass-pale:   #E5D2AE;
+
+  --color-forest:       #3F5337;
+  --color-forest-deep:  #2A3825;
+  --color-forest-light: #6E8161;
+
+  --color-terra:        #A85939;
+
+  --color-line:         #D6CDB8;
+  --color-line-soft:    #E5DDC8;
+
+  --font-display: var(--font-dm-serif), Georgia, serif;
+  --font-sans:    var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono:    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--color-brass); color: var(--color-cream); }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    color: var(--color-ink);
+  }
+
+  img { display: block; max-width: 100%; height: auto; filter: saturate(0.96) contrast(1.04); }
+
+  /* Lenis */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: clip; }
+}
+
+@layer utilities {
+  .container-x { padding-left: clamp(20px, 5vw, 56px); padding-right: clamp(20px, 5vw, 56px); }
+
+  .brass        { color: var(--color-brass); }
+  .brass-deep   { color: var(--color-brass-deep); }
+  .brass-light  { color: var(--color-brass-light); }
+
+  .micro {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-brass-deep);
+  }
+  .kicker::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--color-brass);
+  }
+
+  .h-display    { font-family: var(--font-display); font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; }
+  .h-hero       { font-size: clamp(2.4rem, 4.4vw, 3.8rem); }
+  .h-section    { font-size: clamp(1.9rem, 3vw, 2.6rem); }
+  .h-card       { font-size: clamp(1.2rem, 1.6vw, 1.4rem); }
+
+  .lead {
+    font-size: clamp(1rem, 1.2vw, 1.12rem);
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+  }
+
+  /* Card hover */
+  .card-hover {
+    transition: transform .55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow .55s, border-color .55s, background .55s;
+  }
+  .card-hover:hover { transform: translateY(-3px); }
+
+  /* Image zoom on hover */
+  .img-zoom {
+    transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Section number badge — left rail */
+  .section-num-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--color-brass);
+  }
+  .section-num-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--color-brass);
+    border-radius: 50%;
+  }
+
+  /* Brass rule */
+  .rule-brass    { height: 1px; background: var(--color-brass); border: 0; }
+  .rule-line     { height: 1px; background: var(--color-line); border: 0; }
+}
+
+/* Marquee */
+@keyframes marquee-x { to { transform: translateX(-50%); } }
+.marquee-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  width: max-content;
+  animation: marquee-x var(--marquee-duration, 40s) linear infinite;
+}
+
+/* Ken Burns */
+@keyframes kb {
+  0% { transform: scale(1.04); }
+  100% { transform: scale(1.12); }
+}
+.kenburns { animation: kb 24s ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .kenburns { animation: none; }
+}
