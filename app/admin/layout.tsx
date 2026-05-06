@@ -29,7 +29,7 @@ export default async function AdminLayout({
 
   return (
     <div className="bg-[var(--color-cream)]">
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen flex-col lg:flex-row">
         <AdminSidebar
           email={me.email}
           displayName={me.display_name}
@@ -37,8 +37,8 @@ export default async function AdminLayout({
           isSuper={me.is_super}
           permissions={me.permissions}
         />
-        <main className="flex-1 overflow-x-hidden">
-          <div className="mx-auto max-w-[1200px] px-8 py-8">
+        <main className="flex-1 min-w-0 overflow-x-hidden">
+          <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
             <Suspense fallback={null}>
               <FlashFromQuery />
             </Suspense>

@@ -222,7 +222,7 @@ export function MomentsEditor({
         </div>
       </FormSection>
 
-      <div className="sticky bottom-0 -mx-6 flex items-center justify-end gap-3 border-t border-[var(--color-line)] bg-[var(--color-cream-soft)] px-6 py-4">
+      <div className="sticky bottom-0 -mx-4 flex items-center justify-end gap-3 border-t border-[var(--color-line)] bg-[var(--color-cream-soft)] px-4 py-4 sm:-mx-6 sm:px-6">
         <button
           type="button"
           onClick={save}

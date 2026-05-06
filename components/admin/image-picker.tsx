@@ -104,8 +104,8 @@ export function ImagePicker({ name, value, onChange, fallbackUrl, label }: Props
         </label>
       )}
       {name && <input type="hidden" name={name} value={chosenId ?? ""} />}
-      <div className="flex items-start gap-4">
-        <div className="relative h-28 w-40 shrink-0 overflow-hidden border border-[var(--color-line)] bg-[var(--color-cream-deep)]">
+      <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
+        <div className="relative h-28 w-full max-w-[200px] shrink-0 overflow-hidden border border-[var(--color-line)] bg-[var(--color-cream-deep)] sm:w-40">
           {previewUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={previewUrl} alt="" className="h-full w-full object-cover" />
@@ -120,7 +120,7 @@ export function ImagePicker({ name, value, onChange, fallbackUrl, label }: Props
             </span>
           )}
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-row flex-wrap gap-2 sm:flex-col">
           <button
             type="button"
             onClick={() => setOpen(true)}

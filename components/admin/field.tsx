@@ -95,15 +95,15 @@ export function FormSection({
 }) {
   return (
     <section className="border border-[var(--color-line)] bg-white">
-      <header className="border-b border-[var(--color-line)] bg-[var(--color-cream-soft)] px-6 py-4">
-        <h2 className="font-[var(--font-display)] text-[19px] text-[var(--color-ink)]">
+      <header className="border-b border-[var(--color-line)] bg-[var(--color-cream-soft)] px-4 py-3 sm:px-6 sm:py-4">
+        <h2 className="font-[var(--font-display)] text-[18px] text-[var(--color-ink)] sm:text-[19px]">
           {title}
         </h2>
         {description && (
           <p className="mt-1 text-[13px] text-[var(--color-ink-mute)]">{description}</p>
         )}
       </header>
-      <div className="space-y-5 p-6">{children}</div>
+      <div className="space-y-5 p-4 sm:p-6">{children}</div>
     </section>
   );
 }

@@ -290,16 +290,25 @@ export function MenuEditor({
                     ) : (
                       <div className="space-y-2">
                         {c.items.map((it, idx) => (
-                          <div key={it.id ?? idx} className="grid grid-cols-[auto_1fr_1fr_auto_auto] items-center gap-2 border border-[var(--color-line)] bg-[var(--color-cream-soft)] p-2">
-                            <div className="flex flex-col">
-                              <button type="button" onClick={() => c.id && moveItem(c.id, idx, -1)} disabled={idx === 0} className="text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronUp size={14} /></button>
-                              <button type="button" onClick={() => c.id && moveItem(c.id, idx, 1)} disabled={idx === c.items.length - 1} className="text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronDown size={14} /></button>
+                          <div key={it.id ?? idx} className="border border-[var(--color-line)] bg-[var(--color-cream-soft)] p-3">
+                            {/* Top row: reorder + delete */}
+                            <div className="mb-2 flex items-center justify-between">
+                              <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-brass-deep)]">
+                                Voce {idx + 1}
+                              </span>
+                              <div className="flex items-center gap-1">
+                                <button type="button" onClick={() => c.id && moveItem(c.id, idx, -1)} disabled={idx === 0} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronUp size={14} /></button>
+                                <button type="button" onClick={() => c.id && moveItem(c.id, idx, 1)} disabled={idx === c.items.length - 1} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronDown size={14} /></button>
+                                <button type="button" onClick={() => c.id && removeItem(c.id, it)} className="rounded p-1 text-[var(--color-terra)] hover:bg-white"><Trash2 size={14} /></button>
+                              </div>
                             </div>
-                            <Input placeholder="Nome" value={it.name} onChange={(e) => c.id && updateItem(c.id, it.id, { name: e.target.value })} />
-                            <Input placeholder="Descrizione" value={it.description} onChange={(e) => c.id && updateItem(c.id, it.id, { description: e.target.value })} />
-                            <Input className="w-24" placeholder="Prezzo" value={it.price} onChange={(e) => c.id && updateItem(c.id, it.id, { price: e.target.value })} />
-                            <button type="button" onClick={() => c.id && removeItem(c.id, it)} className="rounded p-1 text-[var(--color-terra)] hover:bg-white"><Trash2 size={14} /></button>
-                            <div className="col-span-5 flex items-center gap-5 px-1 pt-1">
+                            {/* Inputs: stack on mobile, grid on sm+ */}
+                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_120px]">
+                              <Input placeholder="Nome" value={it.name} onChange={(e) => c.id && updateItem(c.id, it.id, { name: e.target.value })} />
+                              <Input placeholder="Descrizione" value={it.description} onChange={(e) => c.id && updateItem(c.id, it.id, { description: e.target.value })} />
+                              <Input placeholder="Prezzo" value={it.price} onChange={(e) => c.id && updateItem(c.id, it.id, { price: e.target.value })} />
+                            </div>
+                            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
                               <Toggle checked={it.show_on_homepage} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_homepage: v })} label="Homepage" />
                               <Toggle checked={it.show_on_menu} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_menu: v })} label="Pagina /menu" />
                             </div>
@@ -336,7 +345,7 @@ export function MenuEditor({
         </div>
       </div>
 
-      <div className="sticky bottom-0 -mx-6 flex items-center justify-end border-t border-[var(--color-line)] bg-[var(--color-cream-soft)] px-6 py-4">
+      <div className="sticky bottom-0 -mx-4 flex items-center justify-end border-t border-[var(--color-line)] bg-[var(--color-cream-soft)] px-4 py-4 sm:-mx-6 sm:px-6">
         <button type="button" onClick={saveCats} disabled={savingCats} className="bg-[var(--color-ink)] px-6 py-2.5 font-[var(--font-mono)] text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-cream)] hover:bg-[var(--color-brass-deep)] disabled:opacity-60">
           {savingCats ? "Salvataggio…" : "Salva ordine + impostazioni categorie"}
         </button>
