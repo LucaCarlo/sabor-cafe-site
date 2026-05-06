@@ -14,7 +14,26 @@ const links = [
   { href: "/contatti", label: "Visita" },
 ];
 
-export function Nav() {
+export type NavSettings = {
+  brand_primary: string;
+  brand_secondary: string;
+  instagram_url: string;
+  instagram_handle: string;
+  reservation_label: string;
+  reservation_href: string;
+};
+
+const DEFAULTS: NavSettings = {
+  brand_primary: "Maison",
+  brand_secondary: "Sabor",
+  instagram_url: "https://www.instagram.com/sabor.cafe/",
+  instagram_handle: "@sabor.cafe",
+  reservation_label: "Riserva",
+  reservation_href: "/contatti",
+};
+
+export function Nav({ settings = DEFAULTS }: { settings?: NavSettings }) {
+  const s = { ...DEFAULTS, ...settings };
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
@@ -33,8 +52,6 @@ export function Nav() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // On homepage hero is split (right side photo, left dark panel) so nav text always
-  // sits over a dark area when not scrolled. On other pages, hero has dark overlay.
   const overDark = !scrolled;
 
   return (
@@ -48,7 +65,6 @@ export function Nav() {
         )}
       >
         <div className="container-x mx-auto flex max-w-[1500px] items-center justify-between py-4">
-          {/* Brand */}
           <Link
             href="/"
             className={cn(
@@ -62,14 +78,13 @@ export function Nav() {
                 overDark ? "text-[var(--color-brass-light)]" : "text-[var(--color-brass-deep)]",
               )}
             >
-              Maison
+              {s.brand_primary}
             </span>
             <span className="font-[var(--font-display)] text-[20px] italic leading-none">
-              Sabor
+              {s.brand_secondary}
             </span>
           </Link>
 
-          {/* Center nav */}
           <nav aria-label="Navigazione" className="hidden items-center gap-9 lg:flex">
             {links.map((l) => {
               const active = pathname === l.href;
@@ -99,9 +114,8 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            {/* Reserve CTA */}
             <Link
-              href="/contatti"
+              href={s.reservation_href}
               className={cn(
                 "hidden items-center gap-2 rounded-sm border px-5 py-2.5 font-[var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-500 md:inline-flex",
                 isHome
@@ -111,10 +125,9 @@ export function Nav() {
                   : "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-cream)] hover:bg-[var(--color-brass-deep)] hover:border-[var(--color-brass-deep)]",
               )}
             >
-              Riserva
+              {s.reservation_label}
               <span className="text-[14px]">→</span>
             </Link>
-            {/* Burger */}
             <button
               aria-label={open ? "Chiudi menu" : "Apri menu"}
               aria-expanded={open}
@@ -169,19 +182,19 @@ export function Nav() {
               ))}
               <li className="mt-8 flex flex-col gap-3 text-center">
                 <Link
-                  href="/contatti"
+                  href={s.reservation_href}
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center justify-center gap-2 border border-[var(--color-brass-light)] px-7 py-3.5 font-[var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-brass-light)]"
                 >
-                  Riserva un tavolo →
+                  {s.reservation_label} →
                 </Link>
                 <a
-                  href="https://www.instagram.com/sabor.cafe/"
+                  href={s.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-center font-[var(--font-mono)] text-[11px] uppercase tracking-[0.22em] text-[rgba(201,163,111,0.7)]"
                 >
-                  @sabor.cafe ↗
+                  {s.instagram_handle} ↗
                 </a>
               </li>
             </ul>

@@ -8,7 +8,31 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 type Reason = "Riservare un tavolo" | "Evento privato" | "Collaborazione" | "Altro";
 
-export function ContactBlock() {
+export type ContactBlockProps = {
+  city?: string;
+  hours_weekday?: string;
+  hours_weekend_label?: string;
+  hours_weekend?: string;
+  instagram_url?: string;
+  instagram_handle?: string;
+  coords_label?: string;
+};
+
+const D: Required<ContactBlockProps> = {
+  city: "Civitanova Marche",
+  hours_weekday: "07:00 — 23:00",
+  hours_weekend_label: "Sabato-Domenica",
+  hours_weekend: "fino alle 24:00",
+  instagram_url: "https://www.instagram.com/sabor.cafe/",
+  instagram_handle: "@sabor.cafe",
+  coords_label: "43°18′N · 13°43′E",
+};
+
+export function ContactBlock(props: ContactBlockProps = {}) {
+  const p = {
+    ...D,
+    ...Object.fromEntries(Object.entries(props).filter(([, v]) => v != null && v !== "")),
+  } as Required<ContactBlockProps>;
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState<{
     name: string;
@@ -27,28 +51,11 @@ export function ContactBlock() {
 
   return (
     <section className="container-x mx-auto max-w-[1500px] py-[clamp(80px,10vw,140px)]">
-      {/* Three info cards */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         {[
-          {
-            icon: MapPin,
-            k: "Indirizzo",
-            v: "Civitanova Marche",
-            sub: "Italia · centro storico",
-          },
-          {
-            icon: Clock,
-            k: "Orario",
-            v: "07:00 — 23:00",
-            sub: "Sabato-Domenica fino alle 24:00",
-          },
-          {
-            icon: Instagram,
-            k: "Social",
-            v: "@sabor.cafe",
-            sub: "DM aperti",
-            href: "https://www.instagram.com/sabor.cafe/",
-          },
+          { icon: MapPin, k: "Indirizzo", v: p.city, sub: "Italia · centro storico" },
+          { icon: Clock, k: "Orario", v: p.hours_weekday, sub: `${p.hours_weekend_label} ${p.hours_weekend}` },
+          { icon: Instagram, k: "Social", v: p.instagram_handle, sub: "DM aperti", href: p.instagram_url },
         ].map((c, i) => {
           const Icon = c.icon;
           return (
@@ -78,17 +85,13 @@ export function ContactBlock() {
                   {c.v}
                 </span>
               )}
-              <span className="mt-1 block text-[14px] text-[var(--color-ink-mute)]">
-                {c.sub}
-              </span>
+              <span className="mt-1 block text-[14px] text-[var(--color-ink-mute)]">{c.sub}</span>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Form + map */}
       <div className="mt-16 grid grid-cols-1 gap-x-[clamp(30px,5vw,72px)] gap-y-12 md:grid-cols-12">
-        {/* Form */}
         <motion.div
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -101,8 +104,7 @@ export function ContactBlock() {
             Una <span className="italic brass-deep">parola</span>, basta poco.
           </h2>
           <p className="lead mt-5 max-w-[44ch]">
-            Per prenotazioni, eventi privati, collaborazioni o domande.
-            Rispondiamo in giornata.
+            Per prenotazioni, eventi privati, collaborazioni o domande. Rispondiamo in giornata.
           </p>
 
           <form onSubmit={submit} className="mt-10 space-y-5">
@@ -163,9 +165,7 @@ export function ContactBlock() {
               type="submit"
               className="group inline-flex items-center gap-3 bg-[var(--color-ink)] px-7 py-4 font-[var(--font-mono)] text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-cream)] transition-all hover:bg-[var(--color-brass-deep)]"
             >
-              {sent ? (
-                <>Messaggio inviato ✓</>
-              ) : (
+              {sent ? <>Messaggio inviato ✓</> : (
                 <>
                   Invia messaggio
                   <Send size={14} strokeWidth={2} className="transition-transform group-hover:translate-x-1" />
@@ -180,7 +180,6 @@ export function ContactBlock() {
           </p>
         </motion.div>
 
-        {/* Map + quick contact */}
         <motion.aside
           initial={{ opacity: 0, y: 22 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -189,9 +188,7 @@ export function ContactBlock() {
           className="md:col-span-5"
         >
           <div className="section-num-badge mb-5">.02 — Mappa</div>
-          <h3 className="h-display text-[clamp(1.6rem,2.4vw,2rem)]">
-            Cuore di Civitanova.
-          </h3>
+          <h3 className="h-display text-[clamp(1.6rem,2.4vw,2rem)]">Cuore di {p.city}.</h3>
 
           <div className="relative mt-6 aspect-[4/3] w-full overflow-hidden border border-[var(--color-line)] bg-[var(--color-cream-deep)]">
             <svg viewBox="0 0 600 450" className="absolute inset-0 h-full w-full">
@@ -208,11 +205,7 @@ export function ContactBlock() {
                 <path d="M0 320 L600 340" />
                 <path d="M0 110 L600 90" />
               </g>
-              <path
-                d="M0 380 Q150 360 300 390 T600 380 L600 450 L0 450 Z"
-                fill="#3F5337"
-                opacity="0.18"
-              />
+              <path d="M0 380 Q150 360 300 390 T600 380 L600 450 L0 450 Z" fill="#3F5337" opacity="0.18" />
               <g transform="translate(310, 215)">
                 <circle r="22" fill="#9C7A4B" opacity="0.25" />
                 <circle r="14" fill="#9C7A4B" opacity="0.4" />
@@ -246,7 +239,7 @@ export function ContactBlock() {
                   Coordinate
                 </span>
                 <span className="mt-0.5 block font-[var(--font-display)] text-[clamp(1.05rem,1.4vw,1.18rem)] text-[var(--color-ink)]">
-                  43°18′N · 13°43′E
+                  {p.coords_label}
                 </span>
               </div>
             </li>
@@ -257,15 +250,7 @@ export function ContactBlock() {
   );
 }
 
-function Field({
-  label,
-  children,
-  required,
-}: {
-  label: string;
-  children: React.ReactNode;
-  required?: boolean;
-}) {
+function Field({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) {
   return (
     <div>
       <label className="kicker mb-2 block">
