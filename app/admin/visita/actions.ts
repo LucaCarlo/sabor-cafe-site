@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const str = (fd: FormData, k: string, def = "") => String(fd.get(k) ?? def);
 
 export async function saveVisita(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("visita.edit");
   const sb = supabaseAdmin();
   const payload = {
     kicker: str(formData, "kicker"),

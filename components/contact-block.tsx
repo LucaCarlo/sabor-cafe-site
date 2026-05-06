@@ -215,7 +215,7 @@ export function ContactBlock(props: ContactBlockProps = {}) {
             <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-[var(--color-cream-soft)] px-4 py-2 shadow-sm">
               <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-[var(--color-brass)]" />
               <span className="font-[var(--font-mono)] text-[11px] uppercase tracking-[0.22em] text-[var(--color-ink)]">
-                Maison Sabor · qui
+                Sabor Cafè · qui
               </span>
             </div>
           </div>

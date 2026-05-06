@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getEventi, getEventiSection } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { SaveBar } from "@/components/admin/save-bar";
@@ -8,7 +8,7 @@ import { EventiEditor } from "./eventi-editor";
 export const dynamic = "force-dynamic";
 
 export default async function EventiAdmin() {
-  await requireAdmin();
+  await requirePermission("eventi.edit");
   const [section, items] = await Promise.all([getEventiSection(), getEventi()]);
 
   return (

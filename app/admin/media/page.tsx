@@ -1,11 +1,11 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getAllMedia } from "@/lib/data/site";
 import { MediaLibrary } from "./media-library";
 
 export const dynamic = "force-dynamic";
 
 export default async function MediaPage() {
-  await requireAdmin();
+  await requirePermission("media.view");
   const initial = await getAllMedia();
   return (
     <div>

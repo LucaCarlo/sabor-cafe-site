@@ -31,7 +31,7 @@ export type HeroProps = {
 };
 
 const D: Required<HeroProps> = {
-  kicker_left: "Maison Sabor",
+  kicker_left: "Sabor Cafè",
   kicker_right: "Civitanova · MMXXVI",
   title_line1_before: "Caffè, cucina,",
   title_accent: "aperitivo",

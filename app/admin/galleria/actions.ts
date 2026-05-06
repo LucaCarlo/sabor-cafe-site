@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type GalleryCategoryInput = {
@@ -21,7 +21,7 @@ export type GalleryItemInput = {
 };
 
 export async function saveGalleryCategories(items: GalleryCategoryInput[]) {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -43,7 +43,7 @@ export async function saveGalleryCategories(items: GalleryCategoryInput[]) {
 }
 
 export async function addGalleryCategory(name: string) {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   if (!name.trim()) return { ok: false as const, error: "Nome obbligatorio" };
   const sb = supabaseAdmin();
   const { data: max } = await sb
@@ -64,7 +64,7 @@ export async function addGalleryCategory(name: string) {
 }
 
 export async function deleteGalleryCategory(id: string) {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("gallery_categories").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };
@@ -73,7 +73,7 @@ export async function deleteGalleryCategory(id: string) {
 }
 
 export async function saveGalleryItems(items: GalleryItemInput[]) {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -95,7 +95,7 @@ export async function saveGalleryItems(items: GalleryItemInput[]) {
 }
 
 export async function addGalleryItem() {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const sb = supabaseAdmin();
   const { data: max } = await sb
     .from("gallery_items")
@@ -119,7 +119,7 @@ export async function addGalleryItem() {
 }
 
 export async function deleteGalleryItem(id: string) {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("gallery_items").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };

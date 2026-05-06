@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getManifesto } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea, Select } from "@/components/admin/field";
 import { ImagePicker } from "@/components/admin/image-picker";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const ICONS = ["Coffee", "Utensils", "Wine", "Leaf", "Star", "Heart"] as const;
 
 export default async function ManifestoAdmin() {
-  await requireAdmin();
+  await requirePermission("manifesto.edit");
   const m = await getManifesto();
   const pillars =
     m?.pillars && m.pillars.length === 3

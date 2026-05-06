@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getSettings } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { ImagePicker } from "@/components/admin/image-picker";
@@ -8,7 +8,7 @@ import { saveSettings } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  await requireAdmin();
+  await requirePermission("settings.edit");
   const s = await getSettings();
 
   return (
@@ -36,7 +36,7 @@ export default async function SettingsPage() {
               <Input name="brand_secondary" defaultValue={s?.brand_secondary ?? "Sabor"} />
             </Field>
             <Field label="Nome completo" hint="Per metadata, schema.org, og:title">
-              <Input name="brand_full" defaultValue={s?.brand_full ?? "Maison Sabor"} />
+              <Input name="brand_full" defaultValue={s?.brand_full ?? "Sabor Cafè"} />
             </Field>
             <Field label="Anno (numerali romani per kicker)">
               <Input name="meta_year" defaultValue={s?.meta_year ?? "MMXXVI"} />

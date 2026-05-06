@@ -1,5 +1,5 @@
 -- ============================================================
--- Maison Sabor — Schema Supabase
+-- Sabor Cafè — Schema Supabase
 -- Esegui per intero in: Supabase Dashboard → SQL Editor → Run
 -- ============================================================
 
@@ -28,9 +28,9 @@ create index if not exists idx_media_created_at on media (created_at desc);
 -- Settings singleton (id = 1)
 create table if not exists settings (
   id int primary key default 1,
-  brand_primary text not null default 'Maison',
-  brand_secondary text not null default 'Sabor',
-  brand_full text not null default 'Maison Sabor',
+  brand_primary text not null default 'Sabor',
+  brand_secondary text not null default 'Cafè',
+  brand_full text not null default 'Sabor Cafè',
   meta_year text not null default 'MMXXVI',
   edition_label text not null default 'Édition 2026',
   description text not null default 'Bar contemporaneo a Civitanova Marche. Caffè selezionato, cucina del giorno, aperitivo curato.',
@@ -65,7 +65,7 @@ create table if not exists settings (
 -- Hero (singleton)
 create table if not exists hero (
   id int primary key default 1,
-  kicker_left text not null default 'Maison Sabor',
+  kicker_left text not null default 'Sabor Cafè',
   kicker_right text not null default 'Civitanova · MMXXVI',
   title_line1_before text not null default 'Caffè, cucina,',
   title_accent text not null default 'aperitivo',
@@ -176,7 +176,7 @@ create index if not exists idx_giornata_moments_position on giornata_moments (po
 create table if not exists eventi_section (
   id int primary key default 1,
   kicker text not null default '.04 — Per le tue occasioni',
-  title_before text not null default 'Maison Sabor è anche',
+  title_before text not null default 'Sabor Cafè è anche',
   title_accent text not null default 'privata',
   title_after text not null default '.',
   lead text not null default 'Ti aiutiamo a organizzare l''occasione giusta — da un aperitivo aziendale a una presentazione esclusiva. Spazio, servizio, dettagli: tutto pensato.',

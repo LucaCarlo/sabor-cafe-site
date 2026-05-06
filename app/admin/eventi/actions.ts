@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const str = (fd: FormData, k: string, def = "") => String(fd.get(k) ?? def);
 
 export async function saveEventiSection(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("eventi.edit");
   const sb = supabaseAdmin();
   const { error } = await sb
     .from("eventi_section")
@@ -41,7 +41,7 @@ export type EventoInput = {
 };
 
 export async function saveEventi(items: EventoInput[]) {
-  await requireAdmin();
+  await requirePermission("eventi.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -63,7 +63,7 @@ export async function saveEventi(items: EventoInput[]) {
 }
 
 export async function addEvento() {
-  await requireAdmin();
+  await requirePermission("eventi.edit");
   const sb = supabaseAdmin();
   const { data: max } = await sb
     .from("eventi")
@@ -92,7 +92,7 @@ export async function addEvento() {
 }
 
 export async function deleteEvento(id: string) {
-  await requireAdmin();
+  await requirePermission("eventi.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("eventi").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };

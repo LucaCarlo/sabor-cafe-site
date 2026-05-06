@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getVisita } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { SaveBar } from "@/components/admin/save-bar";
@@ -7,7 +7,7 @@ import { saveVisita } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function VisitaAdmin() {
-  await requireAdmin();
+  await requirePermission("visita.edit");
   const v = await getVisita();
   return (
     <div>

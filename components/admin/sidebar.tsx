@@ -14,33 +14,62 @@ import {
   MapPin,
   Library,
   LogOut,
+  Users,
+  Shield,
+  type LucideIcon,
 } from "lucide-react";
+import type { PermissionKey } from "@/lib/admin/permissions";
 
-const items = [
+type Item = {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  exact?: boolean;
+  permission?: PermissionKey;
+};
+
+const ITEMS: Item[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/settings", label: "Impostazioni", icon: Settings },
-  { href: "/admin/media", label: "Media", icon: ImageIcon },
-  { href: "/admin/hero", label: "Hero", icon: Sun },
-  { href: "/admin/manifesto", label: "Manifesto", icon: Newspaper },
-  { href: "/admin/menu", label: "Menu / Carta", icon: Coffee },
-  { href: "/admin/giornata", label: "Una giornata", icon: Sun },
-  { href: "/admin/eventi", label: "Eventi", icon: CalendarHeart },
-  { href: "/admin/visita", label: "Visita", icon: MapPin },
-  { href: "/admin/galleria", label: "Galleria", icon: Library },
-  { href: "/admin/pages", label: "Pagine (SEO)", icon: Newspaper },
+  { href: "/admin/settings", label: "Impostazioni", icon: Settings, permission: "settings.edit" },
+  { href: "/admin/media", label: "Media", icon: ImageIcon, permission: "media.view" },
+  { href: "/admin/hero", label: "Hero", icon: Sun, permission: "hero.edit" },
+  { href: "/admin/manifesto", label: "Manifesto", icon: Newspaper, permission: "manifesto.edit" },
+  { href: "/admin/menu", label: "Menu / Carta", icon: Coffee, permission: "menu.edit" },
+  { href: "/admin/giornata", label: "Una giornata", icon: Sun, permission: "giornata.edit" },
+  { href: "/admin/eventi", label: "Eventi", icon: CalendarHeart, permission: "eventi.edit" },
+  { href: "/admin/visita", label: "Visita", icon: MapPin, permission: "visita.edit" },
+  { href: "/admin/galleria", label: "Galleria", icon: Library, permission: "galleria.edit" },
+  { href: "/admin/pages", label: "Pagine (SEO)", icon: Newspaper, permission: "pages.edit" },
+  { href: "/admin/users", label: "Utenti admin", icon: Users, permission: "users.manage" },
+  { href: "/admin/roles", label: "Ruoli e permessi", icon: Shield, permission: "roles.manage" },
 ];
 
-export function AdminSidebar({ email }: { email: string }) {
+export function AdminSidebar({
+  email,
+  displayName,
+  roleName,
+  isSuper,
+  permissions,
+}: {
+  email: string;
+  displayName: string;
+  roleName: string;
+  isSuper: boolean;
+  permissions: PermissionKey[];
+}) {
   const pathname = usePathname();
+  const can = (k?: PermissionKey) => !k || isSuper || permissions.includes(k);
+  const visible = ITEMS.filter((it) => can(it.permission));
+
   return (
     <aside className="flex h-screen w-[260px] shrink-0 flex-col border-r border-[var(--color-line)] bg-[var(--color-cream-soft)]">
       <div className="border-b border-[var(--color-line)] px-6 py-5">
         <Link href="/admin" className="flex items-baseline gap-2">
           <span className="font-[var(--font-display)] text-[22px] leading-none brass-deep">
-            Maison
+            Sabor
           </span>
           <span className="font-[var(--font-display)] text-[18px] italic leading-none">
-            Sabor
+            Cafè
           </span>
         </Link>
         <span className="mt-1 block font-[var(--font-mono)] text-[10px] uppercase tracking-[0.22em] text-[var(--color-ink-mute)]">
@@ -50,7 +79,7 @@ export function AdminSidebar({ email }: { email: string }) {
 
       <nav className="flex-1 overflow-y-auto px-3 py-5">
         <ul className="space-y-1">
-          {items.map((it) => {
+          {visible.map((it) => {
             const active = it.exact ? pathname === it.href : pathname.startsWith(it.href);
             const Icon = it.icon;
             return (
@@ -75,8 +104,15 @@ export function AdminSidebar({ email }: { email: string }) {
 
       <div className="border-t border-[var(--color-line)] px-3 py-4">
         <div className="mb-3 px-2 text-[12px] text-[var(--color-ink-mute)]">
-          <div className="font-medium text-[var(--color-ink)]">Connesso come</div>
+          <div className="font-medium text-[var(--color-ink)]">
+            {displayName || email.split("@")[0]}
+          </div>
           <div className="truncate">{email}</div>
+          {roleName && (
+            <div className="mt-1 inline-flex items-center gap-1 rounded bg-[var(--color-brass)]/15 px-2 py-0.5 text-[10px] uppercase tracking-[0.16em] text-[var(--color-brass-deep)]">
+              {roleName}
+            </div>
+          )}
         </div>
         <div className="space-y-1">
           <Link

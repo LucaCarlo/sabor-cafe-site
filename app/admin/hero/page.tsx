@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getHero } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { ImagePicker } from "@/components/admin/image-picker";
@@ -8,7 +8,7 @@ import { saveHero } from "./actions";
 export const dynamic = "force-dynamic";
 
 export default async function HeroAdmin() {
-  await requireAdmin();
+  await requirePermission("hero.edit");
   const h = await getHero();
 
   return (

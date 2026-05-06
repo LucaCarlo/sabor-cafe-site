@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: meta?.title || "Visita",
     description:
       meta?.description ||
-      "Vieni a trovarci a Maison Sabor, Civitanova Marche. Orari, indirizzo, prenotazioni.",
+      "Vieni a trovarci a Sabor Cafè, Civitanova Marche. Orari, indirizzo, prenotazioni.",
   };
 }
 

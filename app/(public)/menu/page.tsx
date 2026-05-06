@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: meta?.title || "Carta",
     description:
       meta?.description ||
-      "La carta completa di Maison Sabor: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.",
+      "La carta completa di Sabor Cafè: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.",
   };
 }
 

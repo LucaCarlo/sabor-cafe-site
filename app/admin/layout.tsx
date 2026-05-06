@@ -5,7 +5,7 @@ import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminToaster, FlashFromQuery } from "@/components/admin/feedback";
 
 export const metadata: Metadata = {
-  title: "Admin · Maison Sabor",
+  title: "Admin · Sabor Cafè",
   robots: { index: false, follow: false },
 };
 
@@ -18,7 +18,6 @@ export default async function AdminLayout({
 }) {
   const me = await currentAdmin();
 
-  // No user yet → render the children alone (login page handles its own UI).
   if (!me) {
     return (
       <div className="min-h-screen bg-[var(--color-cream)]">
@@ -31,7 +30,13 @@ export default async function AdminLayout({
   return (
     <div className="bg-[var(--color-cream)]">
       <div className="flex min-h-screen">
-        <AdminSidebar email={me.email ?? ""} />
+        <AdminSidebar
+          email={me.email}
+          displayName={me.display_name}
+          roleName={me.role_name}
+          isSuper={me.is_super}
+          permissions={me.permissions}
+        />
         <main className="flex-1 overflow-x-hidden">
           <div className="mx-auto max-w-[1200px] px-8 py-8">
             <Suspense fallback={null}>

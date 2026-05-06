@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getCartaSection, getMenuCategories } from "@/lib/data/site";
 import { Field, FormSection, Input } from "@/components/admin/field";
 import { SaveBar } from "@/components/admin/save-bar";
@@ -16,7 +16,7 @@ import { MenuEditor } from "./menu-editor";
 export const dynamic = "force-dynamic";
 
 export default async function MenuAdmin() {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const [section, categories] = await Promise.all([
     getCartaSection(),
     getMenuCategories(),

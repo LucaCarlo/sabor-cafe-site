@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: meta?.title || "Galleria",
     description:
       meta?.description ||
-      "Foto di Maison Sabor: lo spazio, le persone, i dettagli. Civitanova Marche.",
+      "Foto di Sabor Cafè: lo spazio, le persone, i dettagli. Civitanova Marche.",
   };
 }
 
@@ -44,7 +44,7 @@ export default async function GalleriaPage() {
         accent={meta?.header_title_accent || "i"}
         sub={
           meta?.header_sub ||
-          "Una raccolta di scatti che raccontano la vita quotidiana di Maison Sabor."
+          "Una raccolta di scatti che raccontano la vita quotidiana di Sabor Cafè."
         }
         photos={
           meta?.header_photos && meta.header_photos.length

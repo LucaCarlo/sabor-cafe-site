@@ -6,10 +6,10 @@ import { getSettings } from "@/lib/data/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
-  const brand = s?.brand_full ?? "Maison Sabor";
+  const brand = s?.brand_full ?? "Sabor Cafè";
   const description =
     s?.description ??
-    "Maison Sabor — bar contemporaneo a Civitanova Marche. Caffè selezionato, cucina del giorno, aperitivo curato, eventi privati.";
+    "Sabor Cafè — bar contemporaneo a Civitanova Marche. Caffè selezionato, cucina del giorno, aperitivo curato, eventi privati.";
   const siteUrl = s?.site_url ?? "https://saborcafe.it";
   const ogImage =
     s?.og_image_url ??
@@ -62,7 +62,7 @@ export default async function PublicLayout({
   children: React.ReactNode;
 }) {
   const s = await getSettings();
-  const brand = s?.brand_full ?? "Maison Sabor";
+  const brand = s?.brand_full ?? "Sabor Cafè";
   const siteUrl = s?.site_url ?? "https://saborcafe.it";
 
   const jsonLd = {

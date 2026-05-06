@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
 import sharp from "sharp";
-import { currentAdmin } from "@/lib/admin/guard";
+import { currentAdmin, hasPermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import type { PermissionKey } from "@/lib/admin/permissions";
 
 const MAX_DIM = 2200; // largest side, px
 const QUALITY = 80;
 
-export async function GET() {
+async function check(perm: PermissionKey) {
   const me = await currentAdmin();
-  if (!me) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!me) return { ok: false as const, status: 401 };
+  if (!hasPermission(me, perm)) return { ok: false as const, status: 403 };
+  return { ok: true as const, me };
+}
+
+export async function GET() {
+  const c = await check("media.view");
+  if (!c.ok) return NextResponse.json({ error: "forbidden" }, { status: c.status });
 
   const sb = supabaseAdmin();
   const { data, error } = await sb
@@ -20,8 +28,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const me = await currentAdmin();
-  if (!me) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const c = await check("media.upload");
+  if (!c.ok) return NextResponse.json({ error: "forbidden" }, { status: c.status });
 
   const form = await request.formData();
   const file = form.get("file");
@@ -90,8 +98,8 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const me = await currentAdmin();
-  if (!me) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const c = await check("media.delete");
+  if (!c.ok) return NextResponse.json({ error: "forbidden" }, { status: c.status });
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");

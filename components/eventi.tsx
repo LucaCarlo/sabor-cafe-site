@@ -30,7 +30,7 @@ export type EventiProps = {
 
 const D: Required<EventiProps> = {
   kicker: ".04 — Per le tue occasioni",
-  title_before: "Maison Sabor è anche",
+  title_before: "Sabor Cafè è anche",
   title_accent: "privata",
   title_after: ".",
   lead: "Ti aiutiamo a organizzare l'occasione giusta — da un aperitivo aziendale a una presentazione esclusiva. Spazio, servizio, dettagli: tutto pensato.",

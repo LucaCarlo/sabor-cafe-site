@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getGalleryCategories, getGalleryItems } from "@/lib/data/site";
 import { GalleryEditor } from "./gallery-editor";
 import {
@@ -13,7 +13,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function GalleriaAdmin() {
-  await requireAdmin();
+  await requirePermission("galleria.edit");
   const [categories, items] = await Promise.all([
     getGalleryCategories(),
     getGalleryItems(),

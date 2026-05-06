@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const str = (fd: FormData, k: string, def = "") => String(fd.get(k) ?? def);
 
 export async function saveCartaSection(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   const { error } = await sb
     .from("carta_section")
@@ -51,7 +51,7 @@ export type ItemInput = {
 };
 
 export async function saveCategories(items: CategoryInput[]) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -74,7 +74,7 @@ export async function saveCategories(items: CategoryInput[]) {
 }
 
 export async function addCategory(slug: string, label: string) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   if (!slug.trim() || !label.trim())
     return { ok: false as const, error: "Slug ed etichetta obbligatori" };
   const sb = supabaseAdmin();
@@ -105,7 +105,7 @@ export async function addCategory(slug: string, label: string) {
 }
 
 export async function deleteCategory(id: string) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("menu_categories").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };
@@ -115,7 +115,7 @@ export async function deleteCategory(id: string) {
 }
 
 export async function saveItems(items: ItemInput[]) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -138,7 +138,7 @@ export async function saveItems(items: ItemInput[]) {
 }
 
 export async function addItem(categoryId: string) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   const { data: max } = await sb
     .from("menu_items")
@@ -168,7 +168,7 @@ export async function addItem(categoryId: string) {
 }
 
 export async function deleteItem(id: string) {
-  await requireAdmin();
+  await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("menu_items").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };

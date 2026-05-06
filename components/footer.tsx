@@ -18,7 +18,7 @@ export type FooterSettings = {
 const DEFAULTS: FooterSettings = {
   brand_primary: "Maison",
   brand_secondary: "Sabor",
-  brand_full: "Maison Sabor",
+  brand_full: "Sabor Cafè",
   description: "Caffè, cucina, aperitivo. Per ogni occasione, ogni giorno — Civitanova Marche.",
   instagram_url: "https://www.instagram.com/sabor.cafe/",
   instagram_handle: "@sabor.cafe",

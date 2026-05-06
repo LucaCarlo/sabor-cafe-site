@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getPageMeta } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { ImagePicker } from "@/components/admin/image-picker";
@@ -19,7 +19,7 @@ export default async function PagesAdmin({
 }: {
   searchParams: Promise<{ slug?: string }>;
 }) {
-  await requireAdmin();
+  await requirePermission("pages.edit");
   const sp = await searchParams;
   const active = (SLUGS as readonly string[]).includes(sp.slug ?? "")
     ? (sp.slug as (typeof SLUGS)[number])

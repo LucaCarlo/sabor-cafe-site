@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { getGiornataMoments, getGiornataSection } from "@/lib/data/site";
 import { Field, FormSection, Input, Textarea } from "@/components/admin/field";
 import { SaveBar } from "@/components/admin/save-bar";
@@ -8,7 +8,7 @@ import { MomentsEditor } from "./moments-editor";
 export const dynamic = "force-dynamic";
 
 export default async function GiornataAdmin() {
-  await requireAdmin();
+  await requirePermission("giornata.edit");
   const [section, moments] = await Promise.all([
     getGiornataSection(),
     getGiornataMoments(),

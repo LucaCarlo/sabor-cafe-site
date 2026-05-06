@@ -2,13 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/guard";
+import { requirePermission } from "@/lib/admin/guard";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const str = (fd: FormData, k: string, def = "") => String(fd.get(k) ?? def);
 
 export async function saveGiornataSection(formData: FormData) {
-  await requireAdmin();
+  await requirePermission("giornata.edit");
   const sb = supabaseAdmin();
   const { error } = await sb
     .from("giornata_section")
@@ -38,7 +38,7 @@ type MomentInput = {
 };
 
 export async function saveMoments(items: MomentInput[]) {
-  await requireAdmin();
+  await requirePermission("giornata.edit");
   const sb = supabaseAdmin();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
@@ -60,7 +60,7 @@ export async function saveMoments(items: MomentInput[]) {
 }
 
 export async function addMoment(slug: string) {
-  await requireAdmin();
+  await requirePermission("giornata.edit");
   if (!slug.trim()) return { ok: false as const, error: "Slug obbligatorio" };
   const sb = supabaseAdmin();
   const { data: max } = await sb
@@ -89,7 +89,7 @@ export async function addMoment(slug: string) {
 }
 
 export async function deleteMoment(id: string) {
-  await requireAdmin();
+  await requirePermission("giornata.edit");
   const sb = supabaseAdmin();
   const { error } = await sb.from("giornata_moments").delete().eq("id", id);
   if (error) return { ok: false as const, error: error.message };

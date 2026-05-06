@@ -23,11 +23,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://saborcafe.it"),
   title: {
-    default: "Maison Sabor — Civitanova",
-    template: "%s · Maison Sabor",
+    default: "Sabor Cafè — Civitanova",
+    template: "%s · Sabor Cafè",
   },
   description:
-    "Maison Sabor — bar contemporaneo a Civitanova Marche. Caffè selezionato, cucina del giorno, aperitivo curato, eventi privati.",
+    "Sabor Cafè — bar contemporaneo a Civitanova Marche. Caffè selezionato, cucina del giorno, aperitivo curato, eventi privati.",
 };
 
 export const viewport: Viewport = {
