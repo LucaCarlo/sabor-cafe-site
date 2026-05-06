@@ -5,75 +5,35 @@ import { motion } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const sections = [
-  {
-    cat: "Caffè",
-    sub: "Espressi · miscele · specialità",
-    items: [
-      { n: "Espresso", d: "Selezione del giorno", p: "1,40 €" },
-      { n: "Espresso single-origin", d: "Rotazione mensile", p: "2,20 €" },
-      { n: "Espresso macchiato", d: "Goccia di latte fresco", p: "1,50 €" },
-      { n: "Caffè americano", d: "In tazza grande", p: "1,80 €" },
-      { n: "Cappuccino", d: "Schiuma vellutata, cacao a richiesta", p: "1,80 €" },
-      { n: "Latte macchiato", d: "Latte caldo, espresso", p: "2,00 €" },
-      { n: "V60 / Chemex", d: "Filter coffee, alla giornata", p: "4,00 €" },
-      { n: "Affogato", d: "Espresso e gelato di nostra fornitura", p: "4,50 €" },
-    ],
-  },
-  {
-    cat: "Pasticceria",
-    sub: "Fresca, del giorno, fatta come si deve",
-    items: [
-      { n: "Cornetto vuoto", d: "Sfoglia croccante", p: "1,30 €" },
-      { n: "Cornetto crema", d: "Crema fatta in casa", p: "1,50 €" },
-      { n: "Cornetto cioccolato", d: "Cioccolato fondente 70%", p: "1,50 €" },
-      { n: "Cornetto amarena", d: "Amarena Fabbri", p: "1,60 €" },
-      { n: "Brioche vegana", d: "Senza burro né uova", p: "1,80 €" },
-      { n: "Maritozzo con la panna", d: "Soffice, generoso", p: "2,80 €" },
-      { n: "Crostatina", d: "Frutta di stagione", p: "2,20 €" },
-      { n: "Cookie cioccolato", d: "Fondente 70%, croccante fuori", p: "2,00 €" },
-    ],
-  },
-  {
-    cat: "Cucina",
-    sub: "Pranzo veloce ma fatto bene",
-    items: [
-      { n: "Toast classico", d: "Cotto e fontina d'alpeggio", p: "5,00 €" },
-      { n: "Toast vegetariano", d: "Verdure grigliate, hummus", p: "5,50 €" },
-      { n: "Tramezzino tonno", d: "Maionese leggera", p: "4,50 €" },
-      { n: "Tramezzino salmone", d: "Burro e cetriolo", p: "5,50 €" },
-      { n: "Insalata del giorno", d: "Cambia spesso, mai banale", p: "8,00 €" },
-      { n: "Bowl di stagione", d: "Cereali, verdure, proteine", p: "9,50 €" },
-      { n: "Tortino di verdure", d: "Servito con pane caldo", p: "7,50 €" },
-      { n: "Piatto del giorno", d: "Chiedi al banco", p: "10,00 €" },
-    ],
-  },
-  {
-    cat: "Aperitivo & vini",
-    sub: "Calici, taglieri, conversazioni",
-    items: [
-      { n: "Spritz Aperol", d: "Con olive ascolane", p: "6,00 €" },
-      { n: "Spritz Campari", d: "Più amaro, deciso", p: "6,00 €" },
-      { n: "Hugo", d: "Sambuco, prosecco, menta", p: "6,00 €" },
-      { n: "Calice di vino bianco", d: "Verdicchio dei Castelli di Jesi", p: "5,00 €" },
-      { n: "Calice di vino rosso", d: "Rosso piceno superiore", p: "5,00 €" },
-      { n: "Birra alla spina", d: "Selezione marchigiana", p: "5,50 €" },
-      { n: "Tagliere piccolo", d: "Salumi e formaggi locali", p: "10,00 €" },
-      { n: "Tagliere grande", d: "Per due, da condividere", p: "18,00 €" },
-      { n: "Olive ascolane", d: "Fritte al momento, calde", p: "6,00 €" },
-    ],
-  },
-];
+export type MenuSection = {
+  cat: string;
+  sub: string;
+  items: { n: string; d: string; p: string }[];
+};
 
-export function MenuFull() {
+export type MenuFullProps = {
+  sections?: MenuSection[];
+};
+
+const D: Required<MenuFullProps> = {
+  sections: [
+    {
+      cat: "Caffè",
+      sub: "Espressi · miscele · specialità",
+      items: [{ n: "Espresso", d: "Selezione del giorno", p: "1,40 €" }],
+    },
+  ],
+};
+
+export function MenuFull({ sections }: MenuFullProps = {}) {
+  const list = sections && sections.length ? sections : D.sections;
   const [active, setActive] = useState(0);
 
   return (
     <section className="container-x mx-auto max-w-[1300px] py-[clamp(80px,10vw,140px)]">
-      {/* Sticky tabs */}
       <div className="sticky top-[64px] z-20 -mx-[clamp(20px,5vw,56px)] border-b border-[var(--color-line-soft)] bg-[rgba(250,246,236,0.92)] px-[clamp(20px,5vw,56px)] py-3 backdrop-blur-md">
         <div className="flex flex-wrap gap-1">
-          {sections.map((s, i) => (
+          {list.map((s, i) => (
             <button
               key={s.cat}
               onClick={() => {
@@ -83,9 +43,7 @@ export function MenuFull() {
                   ?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
               className={`relative px-4 py-2 font-[var(--font-mono)] text-[11px] uppercase tracking-[0.22em] transition-colors ${
-                active === i
-                  ? "text-[var(--color-ink)]"
-                  : "text-[var(--color-ink-mute)] hover:text-[var(--color-ink)]"
+                active === i ? "text-[var(--color-ink)]" : "text-[var(--color-ink-mute)] hover:text-[var(--color-ink)]"
               }`}
             >
               <span className="mr-2 text-[10px] tracking-normal text-[var(--color-brass)]">
@@ -104,7 +62,7 @@ export function MenuFull() {
       </div>
 
       <div className="mt-16 space-y-24">
-        {sections.map((sec, si) => (
+        {list.map((sec, si) => (
           <motion.div
             key={sec.cat}
             id={`menu-section-${si}`}
@@ -116,7 +74,7 @@ export function MenuFull() {
             <header className="mb-10 flex flex-wrap items-end justify-between gap-3 border-b-2 border-[var(--color-brass)] pb-5">
               <div>
                 <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.22em] text-[var(--color-brass-deep)]">
-                  Sezione 0{si + 1} / 0{sections.length}
+                  Sezione 0{si + 1} / 0{list.length}
                 </span>
                 <h2 className="mt-2 font-[var(--font-display)] text-[clamp(1.9rem,3.4vw,2.8rem)] text-[var(--color-ink)]">
                   {sec.cat}
@@ -128,8 +86,8 @@ export function MenuFull() {
             </header>
 
             <ul className="grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
-              {sec.items.map((it) => (
-                <li key={it.n}>
+              {sec.items.map((it, i) => (
+                <li key={`${sec.cat}-${i}`}>
                   <div className="flex items-baseline gap-3">
                     <span className="font-[var(--font-display)] text-[clamp(1.18rem,1.6vw,1.4rem)] text-[var(--color-ink)]">
                       {it.n}

@@ -18,7 +18,26 @@ const months = [
   "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre",
 ];
 
-export function LiveStrip() {
+export type LiveStripSettings = {
+  hours_weekday: string;
+  city: string;
+  instagram_url: string;
+  instagram_handle: string;
+  open_hour: number;
+  close_hour: number;
+};
+
+const DEFAULTS: LiveStripSettings = {
+  hours_weekday: "07:00 — 23:00",
+  city: "Civitanova Marche",
+  instagram_url: "https://www.instagram.com/sabor.cafe/",
+  instagram_handle: "@sabor.cafe",
+  open_hour: 7,
+  close_hour: 23,
+};
+
+export function LiveStrip({ settings = DEFAULTS }: { settings?: LiveStripSettings }) {
+  const s = { ...DEFAULTS, ...settings };
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -31,11 +50,9 @@ export function LiveStrip() {
   const time = now
     ? now.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })
     : "--:--";
-  const date = now
-    ? `${now.getDate()} ${months[now.getMonth()]}`
-    : "—";
+  const date = now ? `${now.getDate()} ${months[now.getMonth()]}` : "—";
   const day = now ? days[now.getDay()] : "—";
-  const isOpen = now ? now.getHours() >= 7 && now.getHours() < 23 : true;
+  const isOpen = now ? now.getHours() >= s.open_hour && now.getHours() < s.close_hour : true;
 
   return (
     <div className="bg-[var(--color-brass-deep)] text-[var(--color-cream)]">
@@ -57,21 +74,21 @@ export function LiveStrip() {
         <div className="flex flex-wrap items-center gap-x-7 gap-y-2 uppercase tracking-[0.2em] text-[var(--color-brass-pale)]">
           <span className="inline-flex items-center gap-2">
             <Clock size={12} strokeWidth={1.6} />
-            07:00 — 23:00
+            {s.hours_weekday}
           </span>
           <span className="inline-flex items-center gap-2">
             <MapPin size={12} strokeWidth={1.6} />
-            Civitanova Marche
+            {s.city}
           </span>
         </div>
 
         <a
-          href="https://www.instagram.com/sabor.cafe/"
+          href={s.instagram_url}
           target="_blank"
           rel="noopener noreferrer"
           className="font-[var(--font-mono)] uppercase tracking-[0.2em] text-[var(--color-cream)] transition-colors hover:text-[var(--color-brass-light)]"
         >
-          @sabor.cafe ↗
+          {s.instagram_handle} ↗
         </a>
       </div>
     </div>

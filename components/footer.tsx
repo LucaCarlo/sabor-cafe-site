@@ -1,38 +1,70 @@
 import Link from "next/link";
 import { Instagram, Mail, MapPin } from "lucide-react";
 
-export function Footer() {
+export type FooterSettings = {
+  brand_primary: string;
+  brand_secondary: string;
+  brand_full: string;
+  description: string;
+  instagram_url: string;
+  instagram_handle: string;
+  city: string;
+  hours_weekday_label: string;
+  hours_weekday: string;
+  hours_weekend_label: string;
+  hours_weekend: string;
+};
+
+const DEFAULTS: FooterSettings = {
+  brand_primary: "Maison",
+  brand_secondary: "Sabor",
+  brand_full: "Maison Sabor",
+  description: "Caffè, cucina, aperitivo. Per ogni occasione, ogni giorno — Civitanova Marche.",
+  instagram_url: "https://www.instagram.com/sabor.cafe/",
+  instagram_handle: "@sabor.cafe",
+  city: "Civitanova Marche",
+  hours_weekday_label: "Lun-Ven",
+  hours_weekday: "07:00 — 23:00",
+  hours_weekend_label: "Sab-Dom",
+  hours_weekend: "08:00 — 24:00",
+};
+
+export function Footer({
+  settings = DEFAULTS,
+  editionLabel = "Édition 2026",
+}: {
+  settings?: FooterSettings;
+  editionLabel?: string;
+}) {
+  const s = { ...DEFAULTS, ...settings };
   const year = new Date().getFullYear();
   return (
     <footer className="bg-[var(--color-ink-deep)] pt-[clamp(70px,9vw,120px)] text-[var(--color-cream)]">
       <div className="container-x mx-auto max-w-[1500px]">
         <div className="grid grid-cols-2 gap-10 border-b border-[rgba(201,163,111,0.15)] pb-14 md:grid-cols-4">
-          {/* Brand */}
           <div className="col-span-2">
             <Link href="/" className="flex items-baseline gap-2.5 text-[var(--color-cream)]">
               <span className="font-[var(--font-display)] text-[28px] leading-none brass-light">
-                Maison
+                {s.brand_primary}
               </span>
               <span className="font-[var(--font-display)] text-[22px] italic leading-none">
-                Sabor
+                {s.brand_secondary}
               </span>
             </Link>
             <p className="mt-5 max-w-[44ch] font-[var(--font-display)] italic text-[clamp(1.05rem,1.3vw,1.18rem)] leading-[1.55] text-[rgba(250,246,236,0.7)]">
-              Caffè, cucina, aperitivo. Per ogni occasione, ogni giorno —
-              Civitanova Marche.
+              {s.description}
             </p>
             <a
-              href="https://www.instagram.com/sabor.cafe/"
+              href={s.instagram_url}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-7 inline-flex items-center gap-2.5 border border-[var(--color-brass-light)] px-5 py-2.5 font-[var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.22em] text-[var(--color-brass-light)] transition-all hover:bg-[var(--color-brass-light)] hover:text-[var(--color-ink-deep)]"
             >
               <Instagram size={13} strokeWidth={1.6} />
-              @sabor.cafe
+              {s.instagram_handle}
             </a>
           </div>
 
-          {/* Pagine */}
           <div>
             <h4 className="font-[var(--font-mono)] text-[11px] uppercase tracking-[0.22em] text-[var(--color-brass-light)]">
               Pagine
@@ -56,7 +88,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Visita */}
           <div>
             <h4 className="font-[var(--font-mono)] text-[11px] uppercase tracking-[0.22em] text-[var(--color-brass-light)]">
               Vieni a trovarci
@@ -64,14 +95,14 @@ export function Footer() {
             <ul className="mt-5 space-y-3 text-[14px] leading-[1.65] text-[rgba(250,246,236,0.75)]">
               <li className="flex items-start gap-2.5">
                 <MapPin size={14} strokeWidth={1.6} className="brass-light mt-1 shrink-0" />
-                Civitanova Marche · Italia
+                {s.city} · Italia
               </li>
               <li className="flex items-start gap-2.5">
                 <Mail size={14} strokeWidth={1.6} className="brass-light mt-1 shrink-0" />
                 <span>
-                  Lun-Ven 07:00 — 23:00
+                  {s.hours_weekday_label} {s.hours_weekday}
                   <br />
-                  Sab-Dom 08:00 — 24:00
+                  {s.hours_weekend_label} {s.hours_weekend}
                 </span>
               </li>
             </ul>
@@ -79,11 +110,11 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col items-start justify-between gap-3 py-6 font-[var(--font-mono)] text-[10px] uppercase tracking-[0.22em] text-[rgba(250,246,236,0.5)] md:flex-row md:items-center">
-          <span>© {year} Maison Sabor · Civitanova Marche</span>
+          <span>© {year} {s.brand_full} · {s.city}</span>
           <span className="font-[var(--font-display)] not-italic text-[13px] tracking-tight text-[var(--color-brass-light)]">
             Caffè, cucina, aperitivo.
           </span>
-          <span>Édition 2026</span>
+          <span>{editionLabel}</span>
         </div>
       </div>
     </footer>
