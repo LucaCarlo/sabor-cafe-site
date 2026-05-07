@@ -115,13 +115,21 @@ export type MenuCategoryRow = {
   created_at: string;
 };
 
+export type MenuSubcategoryRow = {
+  id: string;
+  category_id: string;
+  label: string;
+  position: number;
+  created_at: string;
+};
+
 export type MenuItemRow = {
   id: string;
   category_id: string;
+  subcategory_id: string | null;
   name: string;
   description: string;
   price: string;
-  subcategory: string;
   position: number;
   show_on_homepage: boolean;
   show_on_menu: boolean;

@@ -39,13 +39,19 @@ export type CategoryInput = {
   position: number;
 };
 
+export type SubcategoryInput = {
+  id: string;
+  label: string;
+  position: number;
+};
+
 export type ItemInput = {
   id?: string;
   category_id: string;
+  subcategory_id: string | null;
   name: string;
   description: string;
   price: string;
-  subcategory: string;
   position: number;
   show_on_homepage: boolean;
   show_on_menu: boolean;
@@ -115,6 +121,75 @@ export async function deleteCategory(id: string) {
   return { ok: true as const };
 }
 
+// --- Sottocategorie ---
+
+export async function addSubcategory(categoryId: string, label = "Nuova sottocategoria") {
+  await requirePermission("menu.edit");
+  const sb = supabaseAdmin();
+  const { data: max } = await sb
+    .from("menu_subcategories")
+    .select("position")
+    .eq("category_id", categoryId)
+    .order("position", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const next = (max?.position ?? 0) + 1;
+  // Garantisce unicità del label all'interno della categoria.
+  let candidate = label;
+  let attempt = 1;
+  while (true) {
+    const { data: existing } = await sb
+      .from("menu_subcategories")
+      .select("id")
+      .eq("category_id", categoryId)
+      .eq("label", candidate)
+      .maybeSingle();
+    if (!existing) break;
+    attempt += 1;
+    candidate = `${label} ${attempt}`;
+  }
+  const { data, error } = await sb
+    .from("menu_subcategories")
+    .insert({ category_id: categoryId, label: candidate, position: next })
+    .select("*")
+    .single();
+  if (error) return { ok: false as const, error: error.message };
+  revalidatePath("/");
+  revalidatePath("/menu");
+  return { ok: true as const, subcategory: data };
+}
+
+export async function deleteSubcategory(id: string) {
+  await requirePermission("menu.edit");
+  const sb = supabaseAdmin();
+  // Le voci collegate hanno ON DELETE SET NULL: tornano "dirette" sotto la
+  // categoria, non vengono cancellate.
+  const { error } = await sb.from("menu_subcategories").delete().eq("id", id);
+  if (error) return { ok: false as const, error: error.message };
+  revalidatePath("/");
+  revalidatePath("/menu");
+  return { ok: true as const };
+}
+
+export async function saveSubcategories(items: SubcategoryInput[]) {
+  await requirePermission("menu.edit");
+  if (items.length === 0) return { ok: true as const };
+  const sb = supabaseAdmin();
+  for (let i = 0; i < items.length; i++) {
+    const s = items[i];
+    const { error } = await sb
+      .from("menu_subcategories")
+      .update({ label: s.label, position: i + 1 })
+      .eq("id", s.id);
+    if (error) return { ok: false as const, error: error.message };
+  }
+  revalidatePath("/");
+  revalidatePath("/menu");
+  return { ok: true as const };
+}
+
+// --- Voci del menu ---
+
 export async function saveItems(items: ItemInput[]) {
   await requirePermission("menu.edit");
   const sb = supabaseAdmin();
@@ -138,7 +213,7 @@ export async function saveItems(items: ItemInput[]) {
   return { ok: true as const };
 }
 
-export async function addItem(categoryId: string) {
+export async function addItem(categoryId: string, subcategoryId: string | null = null) {
   await requirePermission("menu.edit");
   const sb = supabaseAdmin();
   const { data: max } = await sb
@@ -153,10 +228,10 @@ export async function addItem(categoryId: string) {
     .from("menu_items")
     .insert({
       category_id: categoryId,
+      subcategory_id: subcategoryId,
       name: "Nuova voce",
       description: "",
       price: "",
-      subcategory: "",
       position: next,
       show_on_homepage: true,
       show_on_menu: true,

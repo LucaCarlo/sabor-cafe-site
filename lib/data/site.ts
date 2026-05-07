@@ -6,6 +6,7 @@ import type {
   CartaSectionRow,
   MenuCategoryRow,
   MenuItemRow,
+  MenuSubcategoryRow,
   GiornataSectionRow,
   GiornataMomentRow,
   EventiSectionRow,
@@ -72,6 +73,7 @@ export async function getCartaSection(): Promise<CartaSectionRow | null> {
 
 export type MenuCategoryWithItems = MenuCategoryRow & {
   image_url: string | null;
+  subcategories: MenuSubcategoryRow[];
   items: MenuItemRow[];
 };
 
@@ -80,17 +82,31 @@ export async function getMenuCategories(opts?: { onHomepageOnly?: boolean; onMen
   const sb = await supabaseServer();
   let q = sb
     .from("menu_categories")
-    .select("*, media:image_media_id(public_url), menu_items(*)")
+    .select(
+      "*, media:image_media_id(public_url), menu_subcategories(*), menu_items(*)",
+    )
     .order("position", { ascending: true });
   if (opts?.onHomepageOnly) q = q.eq("show_on_homepage", true);
   if (opts?.onMenuOnly) q = q.eq("show_on_menu", true);
   const { data, error } = await q;
   if (error || !data) return [];
-  return (data as Array<MenuCategoryRow & { media: { public_url: string } | null; menu_items: MenuItemRow[] }>).map((c) => {
+  return (
+    data as Array<
+      MenuCategoryRow & {
+        media: { public_url: string } | null;
+        menu_subcategories: MenuSubcategoryRow[];
+        menu_items: MenuItemRow[];
+      }
+    >
+  ).map((c) => {
     const items = (c.menu_items ?? []).slice().sort((a, b) => a.position - b.position);
+    const subcategories = (c.menu_subcategories ?? [])
+      .slice()
+      .sort((a, b) => a.position - b.position);
     return {
       ...c,
       image_url: c.media?.public_url ?? null,
+      subcategories,
       items: opts?.onHomepageOnly
         ? items.filter((i) => i.show_on_homepage)
         : opts?.onMenuOnly

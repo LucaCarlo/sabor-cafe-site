@@ -21,17 +21,20 @@ export default async function MenuPage() {
     getPageMeta("menu"),
   ]);
 
-  const sections =
-    categories.map((c) => ({
+  const sections = categories.map((c) => {
+    const subLabel = new Map<string, string>();
+    for (const s of c.subcategories) subLabel.set(s.id, s.label);
+    return {
       cat: c.label,
       sub: c.sub,
       items: c.items.map((it) => ({
         n: it.name,
         d: it.description,
         p: it.price,
-        sub: it.subcategory ?? "",
+        sub: it.subcategory_id ? (subLabel.get(it.subcategory_id) ?? "") : "",
       })),
-    }));
+    };
+  });
 
   return (
     <>

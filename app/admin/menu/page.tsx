@@ -7,6 +7,9 @@ import {
   addCategory,
   deleteCategory,
   saveCategories,
+  addSubcategory,
+  deleteSubcategory,
+  saveSubcategories,
   addItem,
   deleteItem,
   saveItems,
@@ -31,10 +34,12 @@ export default async function MenuAdmin() {
         <h1 className="mt-1 font-[var(--font-display)] text-[30px]">
           Categorie e voci del menu
         </h1>
-        <p className="mt-1 max-w-[60ch] text-[13.5px] text-[var(--color-ink-mute)]">
+        <p className="mt-1 max-w-[70ch] text-[13.5px] text-[var(--color-ink-mute)]">
           Le categorie sono usate sia in homepage (tabs) che nella pagina Menu completa.
-          Puoi nascondere categorie/voci da una vista o dall'altra. Trascina con le freccette per riordinare.
-          Nelle voci puoi indicare una <strong>sottocategoria</strong> (es. &quot;Espressi&quot;, &quot;Cocktail classici&quot;): voci con la stessa sottocategoria vengono raggruppate nella pagina /menu.
+          Puoi nascondere categorie/voci da una vista o dall&apos;altra. Riordina con le freccette.
+          Dentro ogni categoria puoi creare <strong>sottocategorie</strong> (es. &quot;Espressi&quot;, &quot;Cocktail classici&quot;) e
+          aggiungere voci dentro: nella pagina /menu vengono raggruppate sotto un sotto-titolo.
+          Le voci possono anche stare direttamente sotto la categoria, senza sottocategoria.
         </p>
       </header>
 
@@ -71,6 +76,9 @@ export default async function MenuAdmin() {
         onSaveCategories={saveCategories}
         onAddCategory={addCategory}
         onDeleteCategory={deleteCategory}
+        onSaveSubcategories={saveSubcategories}
+        onAddSubcategory={addSubcategory}
+        onDeleteSubcategory={deleteSubcategory}
         onSaveItems={saveItems}
         onAddItem={addItem}
         onDeleteItem={deleteItem}
