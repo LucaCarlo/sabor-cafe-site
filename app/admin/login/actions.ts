@@ -2,7 +2,6 @@
 
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
-import { isAdminEmail } from "@/lib/admin/guard";
 
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
@@ -11,9 +10,6 @@ export async function login(formData: FormData) {
 
   if (!email || !password) {
     redirect("/admin/login?err=" + encodeURIComponent("Email e password obbligatorie."));
-  }
-  if (!isAdminEmail(email)) {
-    redirect("/admin/login?err=" + encodeURIComponent("Questa email non è autorizzata."));
   }
 
   const supabase = await supabaseServer();

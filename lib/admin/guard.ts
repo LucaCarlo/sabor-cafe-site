@@ -27,14 +27,6 @@ function isBootstrapEmail(email: string | null | undefined): boolean {
   return bootstrapSuperEmails().includes(email.toLowerCase());
 }
 
-/** Used by the login form to pre-validate the email, no DB call. */
-export function isAdminEmail(email: string | null | undefined): boolean {
-  // We allow login if email is bootstrap superadmin OR if it has a row in app_users.
-  // Pre-login we can only check bootstrap; login itself succeeds via Supabase Auth,
-  // and post-login the app_users check happens on the first authenticated request.
-  return isBootstrapEmail(email);
-}
-
 /**
  * Returns the current admin user (with role + permissions) or null.
  * - Bootstrap emails are treated as Superadmin even if no app_users row exists.
