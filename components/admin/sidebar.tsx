@@ -19,6 +19,8 @@ import {
   Shield,
   Menu as MenuIcon,
   X,
+  Sunrise,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 import type { PermissionKey } from "@/lib/admin/permissions";
@@ -31,20 +33,46 @@ type Item = {
   permission?: PermissionKey;
 };
 
-const ITEMS: Item[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/settings", label: "Impostazioni", icon: Settings, permission: "settings.edit" },
-  { href: "/admin/media", label: "Media", icon: ImageIcon, permission: "media.view" },
-  { href: "/admin/hero", label: "Hero", icon: Sun, permission: "hero.edit" },
-  { href: "/admin/manifesto", label: "Manifesto", icon: Newspaper, permission: "manifesto.edit" },
-  { href: "/admin/menu", label: "Menu / Carta", icon: Coffee, permission: "menu.edit" },
-  { href: "/admin/giornata", label: "Una giornata", icon: Sun, permission: "giornata.edit" },
-  { href: "/admin/eventi", label: "Eventi", icon: CalendarHeart, permission: "eventi.edit" },
-  { href: "/admin/visita", label: "Visita", icon: MapPin, permission: "visita.edit" },
-  { href: "/admin/galleria", label: "Galleria", icon: Library, permission: "galleria.edit" },
-  { href: "/admin/pages", label: "Pagine (SEO)", icon: Newspaper, permission: "pages.edit" },
-  { href: "/admin/users", label: "Utenti admin", icon: Users, permission: "users.manage" },
-  { href: "/admin/roles", label: "Ruoli e permessi", icon: Shield, permission: "roles.manage" },
+type Group = {
+  title: string;
+  items: Item[];
+};
+
+const GROUPS: Group[] = [
+  {
+    title: "Generali",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+      { href: "/admin/settings", label: "Impostazioni", icon: Settings, permission: "settings.edit" },
+      { href: "/admin/users", label: "Utenti admin", icon: Users, permission: "users.manage" },
+      { href: "/admin/roles", label: "Ruoli e permessi", icon: Shield, permission: "roles.manage" },
+    ],
+  },
+  {
+    title: "Gestione homepage",
+    items: [
+      { href: "/admin/hero", label: "Hero", icon: Sun, permission: "hero.edit" },
+      { href: "/admin/manifesto", label: "Manifesto", icon: Newspaper, permission: "manifesto.edit" },
+      { href: "/admin/carta", label: "Carta", icon: Coffee, permission: "menu.edit" },
+      { href: "/admin/giornata", label: "Una giornata", icon: Sunrise, permission: "giornata.edit" },
+      { href: "/admin/eventi", label: "Eventi", icon: CalendarHeart, permission: "eventi.edit" },
+      { href: "/admin/visita", label: "Visita", icon: MapPin, permission: "visita.edit" },
+    ],
+  },
+  {
+    title: "Gestione contenuti",
+    items: [
+      { href: "/admin/menu", label: "Menu", icon: Coffee, permission: "menu.edit" },
+      { href: "/admin/galleria", label: "Galleria", icon: Library, permission: "galleria.edit" },
+    ],
+  },
+  {
+    title: "Configurazione",
+    items: [
+      { href: "/admin/pages", label: "Pagine (SEO)", icon: FileText, permission: "pages.edit" },
+      { href: "/admin/media", label: "Media", icon: ImageIcon, permission: "media.view" },
+    ],
+  },
 ];
 
 export function AdminSidebar({
@@ -63,7 +91,10 @@ export function AdminSidebar({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const can = (k?: PermissionKey) => !k || isSuper || permissions.includes(k);
-  const visible = ITEMS.filter((it) => can(it.permission));
+  const visibleGroups = GROUPS
+    .map((g) => ({ ...g, items: g.items.filter((it) => can(it.permission)) }))
+    .filter((g) => g.items.length > 0);
+  const visible = visibleGroups.flatMap((g) => g.items);
 
   // Close drawer on route change
   useEffect(() => {
@@ -159,28 +190,39 @@ export function AdminSidebar({
         </span>
 
         <nav className="flex-1 overflow-y-auto px-3 pb-3 pt-2">
-          <ul className="space-y-1">
-            {visible.map((it) => {
-              const active = it.exact ? pathname === it.href : pathname.startsWith(it.href);
-              const Icon = it.icon;
-              return (
-                <li key={it.href}>
-                  <Link
-                    href={it.href}
-                    className={cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2.5 text-[14px] transition-colors",
-                      active
-                        ? "bg-[var(--color-brass)] text-[var(--color-cream)]"
-                        : "text-[var(--color-ink-soft)] hover:bg-[var(--color-cream-deep)] hover:text-[var(--color-ink)]",
-                    )}
-                  >
-                    <Icon size={17} strokeWidth={1.7} />
-                    {it.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="space-y-5">
+            {visibleGroups.map((g) => (
+              <div key={g.title}>
+                <div className="px-3 pb-1.5 pt-1 font-[var(--font-mono)] text-[9.5px] uppercase tracking-[0.24em] text-[var(--color-ink-mute)]">
+                  {g.title}
+                </div>
+                <ul className="space-y-1">
+                  {g.items.map((it) => {
+                    const active = it.exact
+                      ? pathname === it.href
+                      : pathname.startsWith(it.href);
+                    const Icon = it.icon;
+                    return (
+                      <li key={it.href}>
+                        <Link
+                          href={it.href}
+                          className={cn(
+                            "flex items-center gap-3 rounded-md px-3 py-2.5 text-[14px] transition-colors",
+                            active
+                              ? "bg-[var(--color-brass)] text-[var(--color-cream)]"
+                              : "text-[var(--color-ink-soft)] hover:bg-[var(--color-cream-deep)] hover:text-[var(--color-ink)]",
+                          )}
+                        >
+                          <Icon size={17} strokeWidth={1.7} />
+                          {it.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
         </nav>
 
         <div className="border-t border-[var(--color-line)] px-3 py-4">

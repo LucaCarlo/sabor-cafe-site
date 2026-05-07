@@ -6,11 +6,13 @@ import {
   Coffee,
   Newspaper,
   Sun,
+  Sunrise,
   CalendarHeart,
   MapPin,
   Library,
   Users,
   Shield,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 import type { PermissionKey } from "@/lib/admin/permissions";
@@ -33,42 +35,39 @@ type CardGroup = {
 
 const GROUPS: CardGroup[] = [
   {
-    title: "Contenuti homepage",
+    title: "Generali",
+    description: "Configurazione del sito, accessi e permessi.",
+    cards: [
+      { href: "/admin/settings", icon: Settings, title: "Impostazioni", description: "Brand, contatti, orari, social, SEO globale.", permission: "settings.edit" },
+      { href: "/admin/users", icon: Users, title: "Utenti admin", description: "Crea altri admin, assegna ruoli, cambia password.", permission: "users.manage" },
+      { href: "/admin/roles", icon: Shield, title: "Ruoli e permessi", description: "Definisci cosa può fare ogni utente.", permission: "roles.manage" },
+    ],
+  },
+  {
+    title: "Gestione homepage",
     description: "Le sezioni della homepage, in ordine di apparizione.",
     cards: [
       { href: "/admin/hero", icon: Sun, title: "Hero", description: "Titolo, sottotitolo, foto principale, pulsanti.", permission: "hero.edit" },
       { href: "/admin/manifesto", icon: Newspaper, title: "Manifesto", description: "Sezione editoriale con i tre pilastri.", permission: "manifesto.edit" },
-      { href: "/admin/menu", icon: Coffee, title: "Menu", description: "Categorie, sottocategorie e voci del menu.", permission: "menu.edit" },
-      { href: "/admin/giornata", icon: Sun, title: "Una giornata", description: "Mattina · Pomeriggio · Sera (modificabili).", permission: "giornata.edit" },
+      { href: "/admin/carta", icon: Coffee, title: "Carta", description: "Paragrafo della sezione 'Carta' in homepage (kicker, titolo, CTA).", permission: "menu.edit" },
+      { href: "/admin/giornata", icon: Sunrise, title: "Una giornata", description: "Mattina · Pomeriggio · Sera (modificabili).", permission: "giornata.edit" },
       { href: "/admin/eventi", icon: CalendarHeart, title: "Eventi privati", description: "Aperitivi aziendali, compleanni, presentazioni.", permission: "eventi.edit" },
       { href: "/admin/visita", icon: MapPin, title: "Visita", description: "Sezione contatti homepage e card prenotazioni.", permission: "visita.edit" },
     ],
   },
   {
-    title: "Altre pagine",
+    title: "Gestione contenuti",
+    description: "I contenuti che appaiono sulle pagine interne.",
     cards: [
+      { href: "/admin/menu", icon: Coffee, title: "Menu", description: "Categorie, sottocategorie e voci del menu.", permission: "menu.edit" },
       { href: "/admin/galleria", icon: Library, title: "Galleria", description: "Foto, categorie, ordine. Filtri dinamici.", permission: "galleria.edit" },
-      { href: "/admin/pages", icon: Newspaper, title: "Pagine (SEO)", description: "Header e meta delle pagine /menu, /galleria, /contatti.", permission: "pages.edit" },
-    ],
-  },
-  {
-    title: "Risorse",
-    cards: [
-      { href: "/admin/media", icon: ImageIcon, title: "Libreria media", description: "Carica foto. Vengono ridimensionate e convertite in WebP.", permission: "media.view" },
     ],
   },
   {
     title: "Configurazione",
     cards: [
-      { href: "/admin/settings", icon: Settings, title: "Impostazioni", description: "Brand, contatti, orari, social, SEO globale.", permission: "settings.edit" },
-    ],
-  },
-  {
-    title: "Sistema",
-    description: "Accessi e permessi degli admin.",
-    cards: [
-      { href: "/admin/users", icon: Users, title: "Utenti admin", description: "Crea altri admin, assegna ruoli, cambia password.", permission: "users.manage" },
-      { href: "/admin/roles", icon: Shield, title: "Ruoli e permessi", description: "Definisci cosa può fare ogni utente.", permission: "roles.manage" },
+      { href: "/admin/pages", icon: FileText, title: "Pagine (SEO)", description: "Header e meta delle pagine /menu, /galleria, /contatti.", permission: "pages.edit" },
+      { href: "/admin/media", icon: ImageIcon, title: "Media", description: "Carica foto. Vengono ridimensionate e convertite in WebP.", permission: "media.view" },
     ],
   },
 ];

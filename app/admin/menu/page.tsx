@@ -1,9 +1,6 @@
 import { requirePermission } from "@/lib/admin/guard";
-import { getCartaSection, getMenuCategories } from "@/lib/data/site";
-import { Field, FormSection, Input } from "@/components/admin/field";
-import { SaveBar } from "@/components/admin/save-bar";
+import { getMenuCategories } from "@/lib/data/site";
 import {
-  saveCartaSection,
   addCategory,
   deleteCategory,
   saveCategories,
@@ -20,56 +17,28 @@ export const dynamic = "force-dynamic";
 
 export default async function MenuAdmin() {
   await requirePermission("menu.edit");
-  const [section, categories] = await Promise.all([
-    getCartaSection(),
-    getMenuCategories(),
-  ]);
+  const categories = await getMenuCategories();
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <header>
         <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.22em] text-[var(--color-brass)]">
           Menu
         </span>
         <h1 className="mt-1 font-[var(--font-display)] text-[30px]">
-          Categorie e voci del menu
+          Categorie, sottocategorie e voci
         </h1>
         <p className="mt-1 max-w-[70ch] text-[13.5px] text-[var(--color-ink-mute)]">
-          Le categorie sono usate sia in homepage (tabs) che nella pagina Menu completa.
-          Puoi nascondere categorie/voci da una vista o dall&apos;altra. Riordina con le freccette.
-          Dentro ogni categoria puoi creare <strong>sottocategorie</strong> (es. &quot;Espressi&quot;, &quot;Cocktail classici&quot;) e
-          aggiungere voci dentro: nella pagina /menu vengono raggruppate sotto un sotto-titolo.
-          Le voci possono anche stare direttamente sotto la categoria, senza sottocategoria.
+          Le categorie sono usate sia in homepage (tabs della sezione &quot;Carta&quot;) che
+          nella pagina /menu completa. Puoi nascondere categorie/voci da una vista
+          o dall&apos;altra. Riordina con le freccette. Dentro ogni categoria puoi
+          creare <strong>sottocategorie</strong> e aggiungere voci dentro: nella
+          pagina /menu vengono raggruppate sotto un sotto-titolo. Le voci possono
+          anche stare direttamente sotto la categoria, senza sottocategoria. Per
+          modificare il <strong>paragrafo della homepage</strong> (titolo, kicker,
+          CTA) vai su &quot;Carta&quot;.
         </p>
       </header>
-
-      <form action={saveCartaSection} className="space-y-6">
-        <FormSection title="Heading sezione homepage">
-          <Field label="Kicker">
-            <Input name="kicker" defaultValue={section?.kicker ?? ""} />
-          </Field>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <Field label="Prima dell'accento">
-              <Input name="title_before" defaultValue={section?.title_before ?? ""} />
-            </Field>
-            <Field label="Accento">
-              <Input name="title_accent" defaultValue={section?.title_accent ?? ""} />
-            </Field>
-            <Field label="Dopo l'accento">
-              <Input name="title_after" defaultValue={section?.title_after ?? ""} />
-            </Field>
-          </div>
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <Field label="CTA — etichetta">
-              <Input name="cta_label" defaultValue={section?.cta_label ?? ""} />
-            </Field>
-            <Field label="CTA — link">
-              <Input name="cta_href" defaultValue={section?.cta_href ?? ""} />
-            </Field>
-          </div>
-        </FormSection>
-        <SaveBar label="Salva sezione" />
-      </form>
 
       <MenuEditor
         initial={categories}
