@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getPageMeta("menu");
   return {
-    title: meta?.title || "Carta",
+    title: meta?.title || "Menu",
     description:
       meta?.description ||
-      "La carta completa di Sabor Cafè: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.",
+      "Il menu completo di Sabor Cafè: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.",
   };
 }
 
@@ -25,14 +25,19 @@ export default async function MenuPage() {
     categories.map((c) => ({
       cat: c.label,
       sub: c.sub,
-      items: c.items.map((it) => ({ n: it.name, d: it.description, p: it.price })),
+      items: c.items.map((it) => ({
+        n: it.name,
+        d: it.description,
+        p: it.price,
+        sub: it.subcategory ?? "",
+      })),
     }));
 
   return (
     <>
       <PageHeader
         n={meta?.header_number || ".02"}
-        kicker={meta?.header_kicker || "La carta"}
+        kicker={meta?.header_kicker || "Il menu"}
         title={[
           meta?.header_title_before || "Quattro capitoli,",
           meta?.header_title_accent || "una",

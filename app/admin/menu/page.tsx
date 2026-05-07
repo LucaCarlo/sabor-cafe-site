@@ -26,14 +26,15 @@ export default async function MenuAdmin() {
     <div className="space-y-10">
       <header>
         <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.22em] text-[var(--color-brass)]">
-          Menu / Carta
+          Menu
         </span>
         <h1 className="mt-1 font-[var(--font-display)] text-[30px]">
           Categorie e voci del menu
         </h1>
         <p className="mt-1 max-w-[60ch] text-[13.5px] text-[var(--color-ink-mute)]">
-          Le categorie sono usate sia in homepage (tabs) che nella pagina Carta completa.
+          Le categorie sono usate sia in homepage (tabs) che nella pagina Menu completa.
           Puoi nascondere categorie/voci da una vista o dall'altra. Trascina con le freccette per riordinare.
+          Nelle voci puoi indicare una <strong>sottocategoria</strong> (es. &quot;Espressi&quot;, &quot;Cocktail classici&quot;): voci con la stessa sottocategoria vengono raggruppate nella pagina /menu.
         </p>
       </header>
 

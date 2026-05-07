@@ -5,10 +5,12 @@ import { motion } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+export type MenuItem = { n: string; d: string; p: string; sub?: string };
+
 export type MenuSection = {
   cat: string;
   sub: string;
-  items: { n: string; d: string; p: string }[];
+  items: MenuItem[];
 };
 
 export type MenuFullProps = {
@@ -24,6 +26,23 @@ const D: Required<MenuFullProps> = {
     },
   ],
 };
+
+// Raggruppa le voci preservando l'ordine: voci senza subcategory finiscono in
+// un primo gruppo "anonimo"; tutte le altre formano gruppi nell'ordine in cui
+// la prima voce di quel gruppo appare.
+function groupBySub(items: MenuItem[]): { sub: string; items: MenuItem[] }[] {
+  const groups: { sub: string; items: MenuItem[] }[] = [];
+  const index = new Map<string, number>();
+  for (const it of items) {
+    const key = (it.sub ?? "").trim();
+    if (!index.has(key)) {
+      index.set(key, groups.length);
+      groups.push({ sub: key, items: [] });
+    }
+    groups[index.get(key)!].items.push(it);
+  }
+  return groups;
+}
 
 export function MenuFull({ sections }: MenuFullProps = {}) {
   const list = sections && sections.length ? sections : D.sections;
@@ -85,24 +104,34 @@ export function MenuFull({ sections }: MenuFullProps = {}) {
               </p>
             </header>
 
-            <ul className="grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
-              {sec.items.map((it, i) => (
-                <li key={`${sec.cat}-${i}`}>
-                  <div className="flex items-baseline gap-3">
-                    <span className="font-[var(--font-display)] text-[clamp(1.18rem,1.6vw,1.4rem)] text-[var(--color-ink)]">
-                      {it.n}
-                    </span>
-                    <span className="flex-1 -translate-y-1 border-b border-dotted border-[var(--color-ink-mute)]/40" />
-                    <span className="font-[var(--font-mono)] text-[12px] tracking-[0.05em] text-[var(--color-brass-deep)]">
-                      {it.p}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-[13.5px] leading-[1.6] text-[var(--color-ink-mute)]">
-                    {it.d}
-                  </p>
-                </li>
-              ))}
-            </ul>
+            {groupBySub(sec.items).map((group, gi) => (
+              <div key={`${sec.cat}-g${gi}`} className={gi > 0 ? "mt-12" : ""}>
+                {group.sub && (
+                  <h3 className="mb-6 flex items-center gap-3 font-[var(--font-mono)] text-[10.5px] uppercase tracking-[0.28em] text-[var(--color-brass-deep)]">
+                    <span className="h-px w-8 bg-[var(--color-brass)]" />
+                    {group.sub}
+                  </h3>
+                )}
+                <ul className="grid grid-cols-1 gap-x-12 gap-y-7 md:grid-cols-2">
+                  {group.items.map((it, i) => (
+                    <li key={`${sec.cat}-${gi}-${i}`}>
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-[var(--font-display)] text-[clamp(1.18rem,1.6vw,1.4rem)] text-[var(--color-ink)]">
+                          {it.n}
+                        </span>
+                        <span className="flex-1 -translate-y-1 border-b border-dotted border-[var(--color-ink-mute)]/40" />
+                        <span className="font-[var(--font-mono)] text-[12px] tracking-[0.05em] text-[var(--color-brass-deep)]">
+                          {it.p}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-[13.5px] leading-[1.6] text-[var(--color-ink-mute)]">
+                        {it.d}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </motion.div>
         ))}
       </div>

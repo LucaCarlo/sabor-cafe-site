@@ -121,6 +121,7 @@ export type MenuItemRow = {
   name: string;
   description: string;
   price: string;
+  subcategory: string;
   position: number;
   show_on_homepage: boolean;
   show_on_menu: boolean;

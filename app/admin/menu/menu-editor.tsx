@@ -29,6 +29,7 @@ type Item = {
   name: string;
   description: string;
   price: string;
+  subcategory: string;
   position: number;
   show_on_homepage: boolean;
   show_on_menu: boolean;
@@ -185,6 +186,7 @@ export function MenuEditor({
         name: it.name,
         description: it.description,
         price: it.price,
+        subcategory: it.subcategory ?? "",
         position: i + 1,
         show_on_homepage: it.show_on_homepage,
         show_on_menu: it.show_on_menu,
@@ -289,31 +291,59 @@ export function MenuEditor({
                       <p className="text-[12.5px] text-[var(--color-ink-mute)]">Nessuna voce. Aggiungi la prima.</p>
                     ) : (
                       <div className="space-y-2">
-                        {c.items.map((it, idx) => (
-                          <div key={it.id ?? idx} className="border border-[var(--color-line)] bg-[var(--color-cream-soft)] p-3">
-                            {/* Top row: reorder + delete */}
-                            <div className="mb-2 flex items-center justify-between">
-                              <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-brass-deep)]">
-                                Voce {idx + 1}
-                              </span>
-                              <div className="flex items-center gap-1">
-                                <button type="button" onClick={() => c.id && moveItem(c.id, idx, -1)} disabled={idx === 0} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronUp size={14} /></button>
-                                <button type="button" onClick={() => c.id && moveItem(c.id, idx, 1)} disabled={idx === c.items.length - 1} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronDown size={14} /></button>
-                                <button type="button" onClick={() => c.id && removeItem(c.id, it)} className="rounded p-1 text-[var(--color-terra)] hover:bg-white"><Trash2 size={14} /></button>
-                              </div>
-                            </div>
-                            {/* Inputs: stack on mobile, grid on sm+ */}
-                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_120px]">
-                              <Input placeholder="Nome" value={it.name} onChange={(e) => c.id && updateItem(c.id, it.id, { name: e.target.value })} />
-                              <Input placeholder="Descrizione" value={it.description} onChange={(e) => c.id && updateItem(c.id, it.id, { description: e.target.value })} />
-                              <Input placeholder="Prezzo" value={it.price} onChange={(e) => c.id && updateItem(c.id, it.id, { price: e.target.value })} />
-                            </div>
-                            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
-                              <Toggle checked={it.show_on_homepage} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_homepage: v })} label="Homepage" />
-                              <Toggle checked={it.show_on_menu} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_menu: v })} label="Pagina /menu" />
-                            </div>
-                          </div>
-                        ))}
+                        {(() => {
+                          const subOpts = Array.from(
+                            new Set(
+                              c.items
+                                .map((x) => (x.subcategory ?? "").trim())
+                                .filter((s) => s.length > 0),
+                            ),
+                          );
+                          const listId = `subcat-list-${c.id ?? "new"}`;
+                          return (
+                            <>
+                              <datalist id={listId}>
+                                {subOpts.map((s) => (
+                                  <option key={s} value={s} />
+                                ))}
+                              </datalist>
+                              {c.items.map((it, idx) => (
+                                <div key={it.id ?? idx} className="border border-[var(--color-line)] bg-[var(--color-cream-soft)] p-3">
+                                  {/* Top row: reorder + delete */}
+                                  <div className="mb-2 flex items-center justify-between">
+                                    <span className="font-[var(--font-mono)] text-[10px] uppercase tracking-[0.18em] text-[var(--color-brass-deep)]">
+                                      Voce {idx + 1}
+                                    </span>
+                                    <div className="flex items-center gap-1">
+                                      <button type="button" onClick={() => c.id && moveItem(c.id, idx, -1)} disabled={idx === 0} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronUp size={14} /></button>
+                                      <button type="button" onClick={() => c.id && moveItem(c.id, idx, 1)} disabled={idx === c.items.length - 1} className="rounded p-1 text-[var(--color-ink-mute)] hover:bg-white hover:text-[var(--color-ink)] disabled:opacity-30"><ChevronDown size={14} /></button>
+                                      <button type="button" onClick={() => c.id && removeItem(c.id, it)} className="rounded p-1 text-[var(--color-terra)] hover:bg-white"><Trash2 size={14} /></button>
+                                    </div>
+                                  </div>
+                                  {/* Sottocategoria opzionale: voci con stesso valore vengono raggruppate in /menu */}
+                                  <div className="mb-2">
+                                    <Input
+                                      list={listId}
+                                      placeholder="Sottocategoria (opzionale, es. Espressi, Cocktail classici, Spritz)"
+                                      value={it.subcategory ?? ""}
+                                      onChange={(e) => c.id && updateItem(c.id, it.id, { subcategory: e.target.value })}
+                                    />
+                                  </div>
+                                  {/* Inputs: stack on mobile, grid on sm+ */}
+                                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_120px]">
+                                    <Input placeholder="Nome" value={it.name} onChange={(e) => c.id && updateItem(c.id, it.id, { name: e.target.value })} />
+                                    <Input placeholder="Descrizione" value={it.description} onChange={(e) => c.id && updateItem(c.id, it.id, { description: e.target.value })} />
+                                    <Input placeholder="Prezzo" value={it.price} onChange={(e) => c.id && updateItem(c.id, it.id, { price: e.target.value })} />
+                                  </div>
+                                  <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
+                                    <Toggle checked={it.show_on_homepage} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_homepage: v })} label="Homepage" />
+                                    <Toggle checked={it.show_on_menu} onChange={(v) => c.id && updateItem(c.id, it.id, { show_on_menu: v })} label="Pagina /menu" />
+                                  </div>
+                                </div>
+                              ))}
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
                     <div className="mt-4 flex justify-end">

@@ -45,6 +45,7 @@ export type ItemInput = {
   name: string;
   description: string;
   price: string;
+  subcategory: string;
   position: number;
   show_on_homepage: boolean;
   show_on_menu: boolean;
@@ -155,6 +156,7 @@ export async function addItem(categoryId: string) {
       name: "Nuova voce",
       description: "",
       price: "",
+      subcategory: "",
       position: next,
       show_on_homepage: true,
       show_on_menu: true,
