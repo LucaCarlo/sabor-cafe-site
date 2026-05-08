@@ -7,11 +7,16 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getPageMeta("contatti");
+  const title = meta?.title || "Visita";
+  const description =
+    meta?.description ||
+    "Vieni a trovarci a Sabor Cafè, Civitanova Marche. Orari, indirizzo, prenotazioni.";
   return {
-    title: meta?.title || "Visita",
-    description:
-      meta?.description ||
-      "Vieni a trovarci a Sabor Cafè, Civitanova Marche. Orari, indirizzo, prenotazioni.",
+    title,
+    description,
+    alternates: { canonical: "/contatti" },
+    openGraph: { title, description, url: "/contatti", type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

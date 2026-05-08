@@ -5,6 +5,7 @@ import { Carta } from "@/components/carta";
 import { Giornata } from "@/components/giornata";
 import { Eventi } from "@/components/eventi";
 import { Visita } from "@/components/visita";
+import { StructuredData } from "@/components/structured-data";
 import {
   getCartaSection,
   getEventi,
@@ -87,6 +88,7 @@ export default async function Page() {
 
   return (
     <>
+      <StructuredData settings={settings} />
       <a
         href="#main"
         className="absolute -left-96 top-2 z-50 rounded bg-[var(--color-ink)] px-4 py-3 text-[var(--color-cream)] focus:left-2"

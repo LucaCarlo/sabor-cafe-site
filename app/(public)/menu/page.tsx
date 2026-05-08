@@ -7,11 +7,16 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getPageMeta("menu");
+  const title = meta?.title || "Menu";
+  const description =
+    meta?.description ||
+    "Il menu completo di Sabor Cafè: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.";
   return {
-    title: meta?.title || "Menu",
-    description:
-      meta?.description ||
-      "Il menu completo di Sabor Cafè: caffè, cucina, aperitivo, pasticceria. Civitanova Marche.",
+    title,
+    description,
+    alternates: { canonical: "/menu" },
+    openGraph: { title, description, url: "/menu", type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

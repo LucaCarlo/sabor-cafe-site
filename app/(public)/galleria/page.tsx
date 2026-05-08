@@ -7,11 +7,16 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const meta = await getPageMeta("galleria");
+  const title = meta?.title || "Galleria";
+  const description =
+    meta?.description ||
+    "Foto di Sabor Cafè: lo spazio, le persone, i dettagli. Civitanova Marche.";
   return {
-    title: meta?.title || "Galleria",
-    description:
-      meta?.description ||
-      "Foto di Sabor Cafè: lo spazio, le persone, i dettagli. Civitanova Marche.",
+    title,
+    description,
+    alternates: { canonical: "/galleria" },
+    openGraph: { title, description, url: "/galleria", type: "website" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
